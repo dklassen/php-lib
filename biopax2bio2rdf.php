@@ -36,6 +36,7 @@ Class BioPAX2Bio2RDF extends RDFFactory
 	private $biopax = null;
 	private $base_ns = null;
 	private $bio2rdf_ns = null;
+	private $dataset_uri = null;
 	private $declared = null;
 	
 	function __construct()
@@ -99,6 +100,11 @@ Class BioPAX2Bio2RDF extends RDFFactory
 		$this->bio2rdf_ns = $bio2rdf_ns;
 		return $this;
 	}
+	function SetDatasetURI($dataset_uri)
+	{
+		$this->dataset_uri = $dataset_uri;
+		return $this;
+	}
 	
 	function Parse()
 	{
@@ -121,10 +127,22 @@ Class BioPAX2Bio2RDF extends RDFFactory
 		
 		$triples = $parser->getTriples();
 		foreach($triples AS $i => $a) {
-			$o['value'] = $a['o'];
+			$s = str_replace(" ","",$a['s']);
+			if($a['s_type'] == 'bnode') {
+				// make a uri
+				$s = $this->bio2rdf_ns.substr($s,2);
+			}
 			$o['type'] = $a['o_type'];
 			$o['datatype'] = $a['o_datatype'];
-			$index[$a['s']][$a['p']][] = $o;
+			$o['value'] = $a['o'];
+			if($a['o_type'] == 'uri') {
+				$o['value'] = str_replace(" ","",$a['o']);
+			}
+			if($a['o_type'] == 'bnode') {
+				$o['type'] = 'uri';
+				$o['value'] = $this->bio2rdf_ns.substr($a['o'],2);
+			}
+			$index[$s][$a['p']][] = $o;
 		}
 		if(!isset($index)) return '';
 		
@@ -145,6 +163,9 @@ Class BioPAX2Bio2RDF extends RDFFactory
 						
 							// generate the id
 							if(!isset($xrefs[$o_uri])) {
+								if(!isset($xref_obj[$this->biopax['id']][0]['value'])) {
+									continue;
+								}
 								$id_string = $xref_obj[$this->biopax['id']][0]['value'];
 								$nso->ParseQName($id_string,$db,$id);
 								if(!$db) {
@@ -158,6 +179,12 @@ Class BioPAX2Bio2RDF extends RDFFactory
 								if($db == "ICD") $db = "icd9";
 								$qname = $nso->MapQName("$db:$id");
 								$nso->ParseQName($qname,$db,$id);
+								if($db == "go") {
+									if(!is_numeric($id[0])) {
+										echo "skipping non-numeric GO identifier: $id".PHP_EOL;
+										continue;
+									}
+								}
 								$new_uri = $nso->getFQURI($qname);
 								
 								// set the new uri
@@ -232,7 +259,12 @@ Class BioPAX2Bio2RDF extends RDFFactory
 				$s_uri = $nso->GetFQURI($nso->MapQName("$ns:$id"));
 			} else {
 				$s_uri = str_replace($this->base_ns,$this->bio2rdf_ns,$s);
-				if(!$s_uri) continue;
+				if(!$s_uri) {
+					continue;
+				}
+			}
+			if(isset($this->dataset_uri)) {
+				$rdf .= $this->Quad($s_uri,$nso->GetFQURI("void:inDataset"),$nso->GetFQURI($this->dataset_uri));
 			}
 			
 			if($s[0] != '_' && $s != $s_uri) $rdf .= $this->Quad($s_uri,$nso->GetFQURI("owl:sameAs"),$s);
