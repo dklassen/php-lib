@@ -137,6 +137,7 @@ class CNamespace
 	'chemblcompound' => array('name' => 'ChEMBL compound','synonyms'=>'chembl.compound'),
 	'chemidplus' => array('name'=>'chemidplus identifier for chemical compounds'),
 	'chemspider' => array('name' => 'ChemSpider','url'=>'http://www.chemspider.com/'),
+	'clinicaltrials'  => array('name'=>'clinical trials','synonyms'=>array('clinicaltrials')),
 	'coil'      => array('name' => 'Database of parallel two-stranded coiled-coils','url'=>'http://www.ch.embnet.org/software/coils/COILS_doc.html'),
 	'corum'     => array('name' => 'Comprehensive Resource of Mammalian protein Complexes', 'url'=>'http://mips.helmholtz-muenchen.de/genre/proj/corum/'),
 	'cpath'     => array('name' => 'CPATH - pathwaycommons resources'),
@@ -261,7 +262,7 @@ class CNamespace
 	'prodom'=> array('name' => 'Protein Domain Families'),
 	'profilescan'=> array('name' => ''),
 	'pubmed'=> array(
-		'name' => 'PubMed',
+		'name' => 'pubmed',
 		'identifiers.org'=>'pubmed'),
 	'pmc'=>array('name'=>'PubMed Central'),
 	'pubchemcompound'=> array('name' => '', 'synonyms' => array('PubChem Compound')),
