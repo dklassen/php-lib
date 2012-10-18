@@ -366,6 +366,7 @@ class CNamespace
 	'chemidplus' => array('name'=>'chemidplus identifier for chemical compounds'),
 	'chemspider' => array('name' => 'ChemSpider','url'=>'http://www.chemspider.com/'),
 	'cleanex'	=> array('name' => 'CleanEx database of gene expression profiles', 'url' => 'http://www.cleanex.isb-sib.ch/'),
+	'clinicaltrials'  => array('name'=>'clinical trials','synonyms'=>array('clinicaltrials')),
 	'coil'      => array('name' => 'Database of parallel two-stranded coiled-coils','url'=>'http://www.ch.embnet.org/software/coils/COILS_doc.html'),
 	'compluyeast2dpage' => array(
 		'name' => '2-DE database at Universidad Complutense de Madrid',
@@ -578,6 +579,7 @@ class CNamespace
 		'name' => 'PeptideAtlas',
 		'url' => 'http://www.peptideatlas.org'
 	),
+	'pathwaycommons'=> array('name' => '', 'synonyms' => array('Pathway commons')),
 	'peroxibase' => array('name' => 'Peroxidase database','url'=>'http://peroxibase.isb-sib.ch/'),
 	'pfam' => array('name' => 'Protein Families'),
 	'pharmgkb' => array('name' => 'PharmGKB knowledge base'),

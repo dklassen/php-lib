@@ -251,7 +251,7 @@ class RDFFactory extends Application
 
 	function SafeLiteral($s)
 	{
-		return str_replace(array("\r","\n",'"'),array('','\n','\"'), $s);
+		return str_replace(array(")","(","-","]","[","\r","\n",'"'),array("\)","\(","\-","\]","\[",'','\n','\"'), $s);
 	}
 	
 	
