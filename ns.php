@@ -574,23 +574,14 @@ class CNamespace
 	'patric' => array('name' => 'Pathosystems Resource Integration Center (PATRIC)', 'url' => 'http://www.patricbrc.org/'),
 	'patternscan' => array('name' => ''),
 	'panther' => array('name' => 'The PANTHER (Protein ANalysis THrough Evolutionary Relationships) Classification System'),
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 	'pathwaycommons'=> array('name' => '', 'synonyms' => array('Pathway commons')),
 	'pdb'=> array('name' => 'Protein Databank','synonyms'=>array('wwpdb','pdbe','rcsb pdb')),
-=======
->>>>>>> origin/master
 	'pdb'=> array('name' => 'Protein Databank','synonyms'=>array('wwpdb','pdbe','rcsb pdb','proteindatabank', 'pdbj', 'pdbsum')),
 	'peptideatlas' => array(
 		'name' => 'PeptideAtlas',
 		'url' => 'http://www.peptideatlas.org'
 	),
-<<<<<<< HEAD
 	'pathwaycommons'=> array('name' => '', 'synonyms' => array('Pathway commons')),
-=======
->>>>>>> upstream/master
->>>>>>> origin/master
 	'peroxibase' => array('name' => 'Peroxidase database','url'=>'http://peroxibase.isb-sib.ch/'),
 	'pfam' => array('name' => 'Protein Families'),
 	'pharmgkb' => array('name' => 'PharmGKB knowledge base'),
@@ -652,20 +643,8 @@ class CNamespace
 	),
 	'pseudocap' => array('Pseudomonas genome database', 'url' => 'http://www.pseudomonas.com/'),
 	'pubmed'=> array(
-<<<<<<< HEAD
-		'name' => 'PubMed',
-		'identifiers.org'=>'pubmed',
-		'synonyms' => 'medline'),
-=======
-<<<<<<< HEAD
 		'name' => 'pubmed',
 		'identifiers.org'=>'pubmed'),
-=======
-		'name' => 'PubMed',
-		'identifiers.org'=>'pubmed',
-		'synonyms' => 'medline'),
->>>>>>> upstream/master
->>>>>>> origin/master
 	'pmc'=>array('name'=>'PubMed Central'),
 	'pubchemcompound'=> array('name' => '', 'synonyms' => array('PubChem Compound','pubchem')),
 	'pubchemsubstance'=> array('name' => '', 'synonyms' => array('PubChem Substance')),
