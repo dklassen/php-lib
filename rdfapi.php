@@ -41,6 +41,7 @@ class RDFFactory extends Application
 	private $write_file=null;
 	private $graph_uri = null;
 	private $dataset_uri = null;
+	private $declared = null;
 	
 	function __construct()
 	{
@@ -202,12 +203,61 @@ class RDFFactory extends Application
 		
 		return $this->Quad($s_uri,$p_uri,$o_uri,$g_uri);
 	}
-	
+
+	function DeclareURI($uri)
+	{	
+		$this->declared[$uri] = '';
+	}
+	function IsDeclared($uri)
+	{
+		if(isset($this->declared[$uri])) return TRUE;
+		return FALSE;
+	}
+	function GetDeclared()
+	{
+		return $this->declared;
+	}
+	function ClearDeclared()
+	{
+		$this->declared = null;
+	}
+
+	function QDeclare($qname,$label)
+	{
+		if(!isset($this->declared[$qname])) {
+			$this->declared[$qname] = $label;
+			return $this->QQuad($qname,"rdfs:label",$this->SafeLiteral($label));
+		}
+		return '';
+	}	
+	function QDeclareClass($qname,$label) 
+	{
+		$d = $this->QDeclare($qname,$label);
+		if($d) return $d.$this->QQuad($qname,"rdf:type","owl:Class");
+		return '';
+	}
+	function QDeclareObjectProperty($qname,$label) 
+	{
+		$d = $this->QDeclare($qname,$label);
+		if($d) return $d.$this->QQuad($qname,"rdf:type","owl:ObjectProperty");
+		return '';
+	}
+	function QDeclareDatatypeProperty($qname,$label) 
+	{
+		$d = $this->QDeclare($qname,$label);
+		if($d) return $d.$this->QQuad($qname,"rdf:type","owl:DatatypeProperty");
+		return '';
+	}
+
 	function SafeLiteral($s)
 	{
-		return str_replace(array(")","(","-","]","[","\r","\n",'"'),array("\)","\(","\-","\]","\[",'','\n','\"'), $s);
+		return specialEscape($s);
 	}
 	
+	function specialEscape($str){
+		$s_noslash = stripslashes($str);
+		return addcslashes($s_noslash, "\\\'\"\n\r\t");
+	}
 	
 	function SetDatasetURI($dataset_uri)
 	{		
@@ -219,18 +269,18 @@ class RDFFactory extends Application
 	}
 	
 	function GetDatasetDescription(
-				$dataset_name, 
-				$dataset_uri, 
-				$creator_uri, 
-				$publisher_name, 
-				$publisher_uri, 
-				$data_urls = null, 
-				$sparql_endpoint = null, 
-				$source_homepage, 
-				$source_rights, 
-				$source_license = null, 
-				$source_location = null, 
-				$source_version = null)
+		$dataset_name, 
+		$dataset_uri, 
+		$creator_uri, 
+		$publisher_name, 
+		$publisher_uri, 
+		$data_urls = null, 
+		$sparql_endpoint = null, 
+		$source_homepage, 
+		$source_rights, 
+		$source_license = null, 
+		$source_location = null, 
+		$source_version = null)
 	{
 		$rdf = '';
 		$date = date("Y-m-d");
@@ -278,13 +328,12 @@ class RDFFactory extends Application
 	
 	function GetBio2RDFReleaseFile($dataset)
 	{
-		$date = date("Ymd");
-		return "bio2rdf-$dataset-$date.nt";
+		return "bio2rdf-$dataset.nt";
 	}
 	
 	function DeleteBio2RDFReleaseFiles($dir)
 	{
-		$files = Utils::GetDirFiles($dir,"/bio2rdf\-.*\.ttl/");
+		$files = Utils::GetDirFiles($dir,"/bio2rdf\-.*\.nt/");
 		foreach($files AS $file) {
 			unlink($dir.$file);
 		}
@@ -307,18 +356,18 @@ class RDFFactory extends Application
 		$source_version = null)
 	{
 		return $this->GetDatasetDescription(				
-				$namespace, 
-				$this->GetDatasetURI(), 
-				$script_url, 
-				"Bio2RDF", 
-				"http://bio2rdf.org", 
-				$download_files,
-				"http://$namespace.bio2rdf.org/sparql", 
-				$source_homepage, 
-				$source_rights, 
-				$source_license, 
-				$source_location, 
-				$source_version);
+			$namespace, 
+			$this->GetDatasetURI(), 
+			$script_url, 
+			"Bio2RDF", 
+			"http://bio2rdf.org", 
+			$download_files,
+			"http://$namespace.bio2rdf.org/sparql", 
+			$source_homepage, 
+			$source_rights, 
+			$source_license, 
+			$source_location, 
+			$source_version);
 	}
 	
 	function GetRightsDescription($right)
@@ -331,7 +380,7 @@ class RDFFactory extends Application
 			"no-derivative" => "no derivatives allowed without permission",
 			"attribution" => "requires attribution",
 			"restricted-by-source-license" => "check source for further restrictions"
-		);
+			);
 		if(!isset($rights[$right])) {
 			trigger_error("Unable to find $right in ".implode(",",array_keys($rights))." of rights");
 			return FALSE;
